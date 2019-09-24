@@ -13,7 +13,6 @@ namespace CheeseMVC.Controllers
     {
 
         static private Dictionary<string, string> Cheeses = new Dictionary<string, string>();
-        //private static List<string> Cheeses = new List<string>();
         static private string error;
 
         // GET: /<controller>/
