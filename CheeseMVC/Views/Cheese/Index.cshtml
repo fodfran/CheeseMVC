@@ -1,0 +1,27 @@
+﻿@{
+   
+}
+
+<h1>My Cheese</h1>
+
+<p><a asp-controller="Cheese" asp-action="Add">Add Cheese</a></p>
+
+@if (ViewBag.Cheeses.Count == 0)
+{
+    <p>No cheeses yet!</p>
+}
+
+<form method="post">
+<ul>
+    @foreach (KeyValuePair<string,string>cheese in ViewBag.Cheeses)
+    {
+    <li>
+        <h3>@cheese.Key
+        <input type="checkbox" name="cheeses" value="@cheese.Key"/></h3>
+        <p>@cheese.Value</p>
+        
+    </li>
+    }
+</ul>
+<input type="submit" value="Remove Cheese" />
+</form>
