@@ -2,25 +2,31 @@
 
 <h1>My Cheese</h1>
 
-<p><a asp-controller="Cheese" asp-action="Add">Add Cheese</a></p>
+
 
 @if (ViewBag.Cheeses.Count == 0)
 {
     <p>No cheeses yet!</p>
 }
+<p><a asp-controller="Cheese" asp-action="Add"><button type="button">Add Cheese</button></a></p>
 
 <form method="post">
-<ul>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+
     
     @foreach (Cheese cheese in ViewBag.Cheeses)
     {
-    <li>
-        <h3>@cheese.Name
-        <input type="checkbox" name="cheeses" value="@cheese.CheeseId"/></h3>
-        <p>@cheese.Description</p>
-        
-    </li>
+        <tr>
+            <td><input type="checkbox" name="cheeses" value="@cheese.CheeseId"/>&nbsp @cheese.Name</td>
+            <td>@cheese.Description</td>  
+        </tr>
     }
-</ul>
-<input type="submit" value="Remove Cheese" />
+    </table>
+    <input type="submit" value="Remove Cheese" />
+    
 </form>
+
