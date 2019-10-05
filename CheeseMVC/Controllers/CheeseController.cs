@@ -13,7 +13,6 @@ namespace CheeseMVC.Controllers
     public class CheeseController : Controller
     {
 
-        //static private Dictionary<string, string> Cheeses = new Dictionary<string, string>();
         static private List<Cheese> Cheeses = new List<Cheese>();
         static private string error;
 
@@ -21,7 +20,7 @@ namespace CheeseMVC.Controllers
         public IActionResult Index()
         {
             
-            ViewBag.Cheeses = Cheeses;
+            ViewBag.Cheeses = CheeseData.GetAll();
             return View();
         }
 
@@ -31,7 +30,7 @@ namespace CheeseMVC.Controllers
         {
             foreach (int id in cheeses)
             {
-                Cheeses.RemoveAll(x => x.CheeseId == id);
+                CheeseData.RemoveCheese(id);
             }
             
             return Redirect("/Cheese");
@@ -40,34 +39,57 @@ namespace CheeseMVC.Controllers
         public IActionResult Add()
         {
             ViewBag.error = error;
+            error = "";
             return View();
 
         }
 
         [HttpPost]
         [Route("/Cheese/Add")]
-        public IActionResult NewCheese(string name, string description)
+        public IActionResult NewCheese(Cheese newCheese)
         {
             //Add new cheese to existing cheeses
+           
             
             Regex rgx = new Regex(@"^[A-Za-z ]+$");
-            if (name == null || rgx.IsMatch(name) == false)
+            if (newCheese.Name == null || rgx.IsMatch(newCheese.Name) == false)
             {
                 error = "Invalid Name";
                 return Redirect("/Cheese/Add");
             }
-
+  
             
-            Cheese newCheese = new Cheese(name, description);
-            Cheeses.Add(newCheese);
-            //Cheeses.Add(name, description);
+            CheeseData.AddCheese(newCheese);
+            
             return Redirect("/Cheese");
         }
 
-
-        /*public IActionResult Index2()
+        public IActionResult Edit(int cheeseId)
         {
-            return View("Index");
-        }*/
+            ViewBag.cheese = CheeseData.GetByID(cheeseId);
+            ViewBag.error = error;
+            error = "";
+            return View();
+        }
+
+        [HttpPost]
+        [Route("/Cheese/Edit")]
+        public IActionResult Edit(int cheeseId, string name, string description)
+        {
+
+            Regex rgx = new Regex(@"^[A-Za-z ]+$");
+            if (name == null || rgx.IsMatch(name) == false)
+            {
+                error = "Invalid Name";
+                return RedirectToAction("Edit", new { cheeseId = cheeseId});
+            }
+
+            Cheese cheeseEdit = CheeseData.GetByID(cheeseId);
+            cheeseEdit.Name = name;
+            cheeseEdit.Description = description;
+
+            return Redirect("/Cheese");
+        }
+
     }
 }

@@ -21,8 +21,10 @@
     @foreach (Cheese cheese in ViewBag.Cheeses)
     {
         <tr>
-            <td><input type="checkbox" name="cheeses" value="@cheese.CheeseId"/>&nbsp @cheese.Name</td>
-            <td>@cheese.Description</td>  
+            <td><input type="checkbox" name="cheeses" value="@cheese.CheeseId"/>&nbsp @cheese.Name &nbsp
+            <a asp-controller="Cheese" asp-action="Edit" asp-route-cheeseId="@cheese.CheeseId">edit</a></td>
+            <td>@cheese.Description</td>
+            
         </tr>
     }
     </table>
