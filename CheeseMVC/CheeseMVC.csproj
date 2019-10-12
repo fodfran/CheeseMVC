@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="Views\Cheese\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Views\Cheese\Edit.html" />

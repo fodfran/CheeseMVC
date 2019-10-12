@@ -1,9 +1,9 @@
-﻿@model CheeseMVC.Models.Cheese
+﻿@model CheeseMVC.ViewModels.AddEditCheeseViewModel
 
-<h1>Edit Cheese @ViewBag.cheese.Name (@ViewBag.cheese.CheeseId)</h1>
+<h1>Edit Cheese @Model.Name</h1> @*@ViewBag.cheese.Name (@ViewBag.cheese.CheeseId)</h1>*@
 
 <form method="post">
-    <div class="form-group">
+    @*<div class="form-group">
         <label>Name: <input class="form-control" type="text" name="name" value="@ViewBag.cheese.Name"/></label>
         <p style="color: red">@ViewBag.error</p>
     </div>
@@ -11,7 +11,26 @@
         <label>Description: <input class="form-control" type="text" name="description" value="@ViewBag.cheese.Description"/></label>
     </div>
     
-    <input type="hidden" value="@ViewBag.cheese.CheeseId" name="id" />
+    <input type="hidden" value="@ViewBag.cheese.CheeseId" name="id" />*@
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input class="form-control" asp-for="Name"/>
+        <span asp-validation-for="Name" style="color: red"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <input class="form-control" asp-for="Description"/>
+        <span asp-validation-for="Description" style="color: red"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Type"></label>
+        <select class="form-control" asp-for="Type" asp-items="Model.CheeseTypes"></select>
+        <span asp-validation-for="Type" style="color: red"></span>
+    </div>
+
     <input type="submit" value="Edit Cheese" />
 </form>
 

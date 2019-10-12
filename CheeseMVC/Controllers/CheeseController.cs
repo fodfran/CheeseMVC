@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CheeseMVC.Models;
+using CheeseMVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,8 +21,9 @@ namespace CheeseMVC.Controllers
         public IActionResult Index()
         {
             
-            ViewBag.Cheeses = CheeseData.GetAll();
-            return View();
+            List<Cheese> cheeses = CheeseData.GetAll();
+
+            return View(cheeses);
         }
 
         [HttpPost]
@@ -38,57 +40,75 @@ namespace CheeseMVC.Controllers
 
         public IActionResult Add()
         {
-            ViewBag.error = error;
-            error = "";
-            return View();
+            AddCheeseViewModel addCheeseViewModel = new AddCheeseViewModel();
+
+            //ViewBag.error = error;
+            //error = "";
+            return View(addCheeseViewModel);
 
         }
 
         [HttpPost]
-        [Route("/Cheese/Add")]
-        public IActionResult NewCheese(Cheese newCheese)
+        public IActionResult Add(AddCheeseViewModel addCheeseViewModel)
         {
             //Add new cheese to existing cheeses
-           
+            if (ModelState.IsValid)
+            {
+                Cheese newCheese = new Cheese
+                {
+                    Name = addCheeseViewModel.Name,
+                    Description = addCheeseViewModel.Description,
+                    Type = addCheeseViewModel.Type
+                };
+
+                CheeseData.AddCheese(newCheese);
+
+                return Redirect("/Cheese");
+            }
+
             
+            /*
             Regex rgx = new Regex(@"^[A-Za-z ]+$");
-            if (newCheese.Name == null || rgx.IsMatch(newCheese.Name) == false)
+            if (addCheeseViewModel.Name == null || rgx.IsMatch(addCheeseViewModel.Name) == false)
             {
                 error = "Invalid Name";
                 return Redirect("/Cheese/Add");
-            }
-  
-            
-            CheeseData.AddCheese(newCheese);
-            
-            return Redirect("/Cheese");
+            }*/
+
+
+            return View(addCheeseViewModel);
         }
 
         public IActionResult Edit(int cheeseId)
         {
-            ViewBag.cheese = CheeseData.GetByID(cheeseId);
-            ViewBag.error = error;
-            error = "";
-            return View();
+            //ViewBag.cheese = CheeseData.GetByID(cheeseId);
+            Cheese cheese = CheeseData.GetByID(cheeseId);
+            AddEditCheeseViewModel addEditCheeseViewModel = new AddEditCheeseViewModel
+            {
+                Name = cheese.Name,
+                Description = cheese.Description,
+                Type = cheese.Type,
+                cheeseId = cheese.CheeseId
+            };
+
+            return View(addEditCheeseViewModel);
         }
 
         [HttpPost]
         [Route("/Cheese/Edit")]
-        public IActionResult Edit(int cheeseId, string name, string description)
+        public IActionResult Edit(AddEditCheeseViewModel addEditCheeseViewModel)
         {
-
-            Regex rgx = new Regex(@"^[A-Za-z ]+$");
-            if (name == null || rgx.IsMatch(name) == false)
+            if (ModelState.IsValid)
             {
-                error = "Invalid Name";
-                return RedirectToAction("Edit", new { cheeseId = cheeseId});
+                Cheese cheeseEdit = CheeseData.GetByID(addEditCheeseViewModel.cheeseId);
+                cheeseEdit.Name = addEditCheeseViewModel.Name;
+                cheeseEdit.Description = addEditCheeseViewModel.Description;
+                cheeseEdit.Type = addEditCheeseViewModel.Type;
+
+                return Redirect("/Cheese");
             }
 
-            Cheese cheeseEdit = CheeseData.GetByID(cheeseId);
-            cheeseEdit.Name = name;
-            cheeseEdit.Description = description;
-
-            return Redirect("/Cheese");
+            return View(addEditCheeseViewModel);
         }
 
     }
