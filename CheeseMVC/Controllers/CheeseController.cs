@@ -15,7 +15,7 @@ namespace CheeseMVC.Controllers
     {
 
         static private List<Cheese> Cheeses = new List<Cheese>();
-        static private string error;
+        //static private string error;
 
         // GET: /<controller>/
         public IActionResult Index()
@@ -54,12 +54,11 @@ namespace CheeseMVC.Controllers
             //Add new cheese to existing cheeses
             if (ModelState.IsValid)
             {
-                Cheese newCheese = new Cheese
-                {
-                    Name = addCheeseViewModel.Name,
-                    Description = addCheeseViewModel.Description,
-                    Type = addCheeseViewModel.Type
-                };
+                Cheese newCheese = AddCheeseViewModel.CreateCheese(
+                    addCheeseViewModel.Name,
+                    addCheeseViewModel.Description,
+                    addCheeseViewModel.Type,
+                    addCheeseViewModel.Rating);
 
                 CheeseData.AddCheese(newCheese);
 
@@ -88,7 +87,8 @@ namespace CheeseMVC.Controllers
                 Name = cheese.Name,
                 Description = cheese.Description,
                 Type = cheese.Type,
-                cheeseId = cheese.CheeseId
+                cheeseId = cheese.CheeseId,
+                Rating = cheese.Rating
             };
 
             return View(addEditCheeseViewModel);
@@ -104,6 +104,7 @@ namespace CheeseMVC.Controllers
                 cheeseEdit.Name = addEditCheeseViewModel.Name;
                 cheeseEdit.Description = addEditCheeseViewModel.Description;
                 cheeseEdit.Type = addEditCheeseViewModel.Type;
+                cheeseEdit.Rating = addEditCheeseViewModel.Rating;
 
                 return Redirect("/Cheese");
             }

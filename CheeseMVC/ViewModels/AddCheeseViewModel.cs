@@ -43,6 +43,23 @@ namespace CheeseMVC.ViewModels
             });
         }
 
+        [Required]
+        [Range(1,5)]
+        [Display(Name = "Rating (1-5)")]
+        public int Rating { get; set; }
+
+        public static Cheese CreateCheese(string name, string description, CheeseType type, int rating)
+        {
+            Cheese newCheese = new Cheese
+            {
+                Name = name,
+                Description = description,
+                Type = type,
+                Rating = rating
+            };
+            return newCheese;
+        }
+
 
     }
 }
